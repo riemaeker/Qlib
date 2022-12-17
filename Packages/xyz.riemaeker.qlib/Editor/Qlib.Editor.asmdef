@@ -1,0 +1,18 @@
+{
+  "name": "Qlib.Editor",
+  "rootNamespace": "Qlib.Editor",
+  "references": [
+    "GUID:922ba9b34cf42482dbc9009a6676e10f"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
