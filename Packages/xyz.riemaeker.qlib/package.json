@@ -1,7 +1,7 @@
 {
   "name": "xyz.riemaeker.qlib",
   "displayName": "Qlib",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Library for importing, exporting and working with id Tech 2 assets in Unity",
   "documentationUrl": "https://github.com/riemaeker/Qlib",
   "unity": "2021.3",
