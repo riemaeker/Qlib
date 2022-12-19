@@ -28,6 +28,15 @@ namespace Qlib.Assets
 			return asset;
 		}
 
+		private static Asset DeserializeLump(byte[] data, string filename)
+		{
+			return filename.Split("/").Last() switch
+			{
+				"palette.lmp" => DeserializeAsset<Palette>(data),
+				_ => DeserializeAsset<GenericAsset>(data)
+			};
+		}
+		
 		#endregion
 
 		#region Properties
@@ -102,6 +111,7 @@ namespace Qlib.Assets
 				Asset asset = entry.PathString.Split(".").Last() switch
 				{
 					"cfg" or "rc" => DeserializeAsset<PlainText>(assetData),
+					"lmp" => DeserializeLump(assetData, entry.PathString),
 					_ => DeserializeAsset<GenericAsset>(assetData)
 				};
 
