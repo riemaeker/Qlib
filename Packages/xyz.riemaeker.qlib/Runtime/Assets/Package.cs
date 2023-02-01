@@ -27,12 +27,15 @@ namespace Qlib.Assets
 
 			return asset;
 		}
-
-		private static Asset DeserializeLump(byte[] data, string filename)
+		
+		// Disambiguation logic for .lmp files, which can be different formats depending
+		// on their path (palette, color map or picture).
+		private static Asset DeserializeLump(byte[] data, string path)
 		{
-			return filename.Split("/").Last() switch
+			return path switch
 			{
-				"palette.lmp" => DeserializeAsset<Palette>(data),
+				"gfx/palette.lmp" => DeserializeAsset<Palette>(data),
+				"gfx/colormap.lmp" => DeserializeAsset<ColorMap>(data),
 				_ => DeserializeAsset<GenericAsset>(data)
 			};
 		}
@@ -57,28 +60,30 @@ namespace Qlib.Assets
 
 #if UNITY_EDITOR
 		/// <summary>
-		///   Imports a package from a .pak file
+		/// Imports a package from a .pak file
 		/// </summary>
 		/// <param name="path">.pak file path.</param>
 		/// <param name="context">Asset import context.</param>
 		/// <returns></returns>
 		public static void Import(string path, AssetImportContext context)
 		{
-			var package = Load(path);
+			var package = Load(path, context);
 
 			context.AddObjectToAsset(context.assetPath, package);
 			context.SetMainObject(package);
 
 			for (var i = 0; i < package.Assets.Count; i++)
+			{
 				context.AddObjectToAsset(package.AssetPaths[i], package.Assets[i]);
+			}
 		}
 #endif
 
 		/// <summary>
-		///   Loads a package from a .pak file.
+		///  Loads a package from a .pak file.
 		/// </summary>
 		/// <param name="path">.pak file path.</param>
-		public static Package Load(string path)
+		public static Package Load(string path, AssetImportContext importContext = null)
 		{
 			var data = File.ReadAllBytes(path);
 			var reader = new BinaryReader(new MemoryStream(data));
@@ -98,6 +103,15 @@ namespace Qlib.Assets
 				var offset = header.DirectoryOffset + i * PakDirectoryEntry.Size;
 				directory.Add(reader.ReadStruct<PakDirectoryEntry>(offset));
 			}
+			
+			// Try to load the palette first so we can use it to generate
+			// textures for <c>IPalettized</c> assets.
+			directory = directory
+				.OrderByDescending(v => v.PathString == "gfx/palette.lmp")
+				.ThenBy(v => v.PathString)
+				.ToList();
+
+			Palette palette = null;
 
 			// Create package with deserialized assets
 			var package = CreateInstance<Package>();
@@ -108,13 +122,25 @@ namespace Qlib.Assets
 				reader.BaseStream.Seek(entry.FileOffset, SeekOrigin.Begin);
 				reader.BaseStream.Read(assetData, 0, (int) entry.FileSize);
 
-				Asset asset = entry.PathString.Split(".").Last() switch
+				// Deserialize asset.
+				var extension = entry.PathString.Split(".").Last();
+				
+				Asset asset = extension switch
 				{
 					"cfg" or "rc" => DeserializeAsset<PlainText>(assetData),
 					"lmp" => DeserializeLump(assetData, entry.PathString),
 					_ => DeserializeAsset<GenericAsset>(assetData)
 				};
-
+				
+				// Store palette.
+				if (asset is Palette)
+					palette = (Palette) asset;
+				
+				// Generate palettized textures if we have a palette available.
+				if (palette != null && asset is IPalletized palletizedAsset)
+					palletizedAsset.Initialize(palette);
+				
+				// Store asset.
 				asset.name = entry.PathString;
 				package.AddAsset(entry.PathString, asset);
 			}
@@ -123,7 +149,7 @@ namespace Qlib.Assets
 		}
 
 		/// <summary>
-		///   Gets an asset from the package.
+		/// Gets an asset from the package.
 		/// </summary>
 		/// <param name="path">Relative path.</param>
 		/// <typeparam name="T">Asset type.</typeparam>

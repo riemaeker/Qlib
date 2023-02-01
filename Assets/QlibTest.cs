@@ -3,13 +3,13 @@ using Qlib.Assets;
 
 public class QlibTest : MonoBehaviour
 {
-	[SerializeField] private Package _pak;
+	[SerializeField] private Palette _palette;
+	[SerializeField] private ColorMap _colorMap;
+	[SerializeField] private Renderer _renderer;
 
 	void Start()
 	{ 
-		if (_pak != null)
-		{
-			Debug.Log($"Package contains {_pak.Assets.Count} assets.");
-		}
+		//_colorMap.Initialize(_palette);
+		_renderer.material.SetTexture("_MainTex", _colorMap.GetTexture());
 	}
 }

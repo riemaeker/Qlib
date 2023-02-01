@@ -11,13 +11,13 @@ namespace Qlib.Editor
 
 		public override void OnInspectorGUI()
 		{
-			var Target = (Palette) target;
+			var palette = (Palette) target;
 
 			GUILayout.BeginVertical();
 			GUILayout.Space(15);
 
-			GUILayout.Label("", GUILayout.Height(256), GUILayout.Width(256));
-			GUI.DrawTexture(GUILayoutUtility.GetLastRect(), Target.PreviewTexture);
+			GUILayout.Label("", GUILayout.Height(128), GUILayout.Width(128));
+			GUI.DrawTexture(GUILayoutUtility.GetLastRect(), palette.PreviewTexture);
 			
 			GUILayout.EndVertical();
 		}

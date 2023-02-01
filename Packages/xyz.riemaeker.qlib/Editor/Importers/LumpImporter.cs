@@ -15,12 +15,14 @@ namespace Qlib.Editor
 		{
 			var data = File.ReadAllBytes(ctx.assetPath);
 
-			Asset asset = ctx.assetPath.Split("/").Last() switch
+			Asset asset = ctx.assetPath switch
 			{
-				"palette.lmp" => ScriptableObject.CreateInstance<Palette>(),
+				"gfx/palette.lmp" => ScriptableObject.CreateInstance<Palette>(),
+				"gfx/colormap.lmp" => ScriptableObject.CreateInstance<ColorMap>(),
 				_ => ScriptableObject.CreateInstance<GenericAsset>()
 			};
-			
+
+			asset.name = ctx.assetPath;
 			asset.Deserialize(data);
 
 			ctx.AddObjectToAsset(ctx.assetPath, asset);
