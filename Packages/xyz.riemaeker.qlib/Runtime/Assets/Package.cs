@@ -36,7 +36,7 @@ namespace Qlib.Assets
 			{
 				"gfx/palette.lmp" => DeserializeAsset<Palette>(data),
 				"gfx/colormap.lmp" => DeserializeAsset<ColorMap>(data),
-				_ => DeserializeAsset<GenericAsset>(data)
+				_ => DeserializeAsset<Picture>(data)
 			};
 		}
 		

@@ -71,9 +71,6 @@ namespace Qlib.Assets
 		public void Initialize(Palette palette)
 		{
 			_palette = palette;
-
-			if (_texture == null)
-				GenerateTexture();
 		}
 
 		public Texture2D GetTexture()

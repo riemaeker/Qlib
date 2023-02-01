@@ -16,7 +16,7 @@ namespace Qlib.Editor
 			GUILayout.BeginVertical();
 			GUILayout.Space(15);
 			
-			GUILayout.Label("", GUILayout.Height(64), GUILayout.Width(256));
+			GUILayout.Label("", GUILayout.Height(colorMap.GetTexture().height * 2), GUILayout.Width(colorMap.GetTexture().width * 2));
 			GUI.DrawTexture(GUILayoutUtility.GetLastRect(), colorMap.GetTexture());
 			
 			GUILayout.EndVertical();

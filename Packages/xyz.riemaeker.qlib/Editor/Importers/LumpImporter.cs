@@ -19,7 +19,7 @@ namespace Qlib.Editor
 			{
 				"gfx/palette.lmp" => ScriptableObject.CreateInstance<Palette>(),
 				"gfx/colormap.lmp" => ScriptableObject.CreateInstance<ColorMap>(),
-				_ => ScriptableObject.CreateInstance<GenericAsset>()
+				_ => ScriptableObject.CreateInstance<Picture>()
 			};
 
 			asset.name = ctx.assetPath;

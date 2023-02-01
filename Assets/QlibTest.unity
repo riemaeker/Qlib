@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.57481617, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -303,7 +303,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1843463677
 GameObject:
@@ -397,7 +397,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &2122966862
 GameObject:
@@ -428,8 +428,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 170be323fb219490581b94391c0ef1e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _palette: {fileID: -1679701985541833484, guid: 167044d9040d5489a8e824c6273d9b75, type: 3}
-  _colorMap: {fileID: 8632469098261753706, guid: 167044d9040d5489a8e824c6273d9b75, type: 3}
+  _palette: {fileID: -1679701985541833484, guid: 63744597269476440999ec652a41e1e4, type: 3}
+  _colorMap: {fileID: 8632469098261753706, guid: 63744597269476440999ec652a41e1e4, type: 3}
   _renderer: {fileID: 32587933}
 --- !u!4 &2122966864
 Transform:
@@ -444,5 +444,5 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
