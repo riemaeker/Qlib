@@ -2,7 +2,7 @@ using Qlib.Assets;
 using UnityEditor;
 using UnityEngine;
 
-namespace Qlib.Editor
+namespace Qlib.Editor.Inspectors
 {
 	[CustomEditor(typeof(Package))]
 	public class PackageInspector : UnityEditor.Editor

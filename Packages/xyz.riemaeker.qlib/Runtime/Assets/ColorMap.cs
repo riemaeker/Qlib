@@ -6,24 +6,11 @@ namespace Qlib.Assets
 	/// <summary>
 	/// Maps light levels to the 256-color palette.
 	/// </summary>
-	public class ColorMap : Asset, IPalletized
+	public class ColorMap : PalettizedImage
 	{
 		#region Fields
 
 		private const int Size = 256 * 64;
-		
-		[SerializeField] private int[] _map = new int[Size];
-		[SerializeField] private Texture2D _texture;
-		[SerializeField] private Palette _palette;
-		
-		#endregion
-
-		#region Properties
-
-		/// <summary>
-		/// Color mapping data.
-		/// </summary>
-		public int[] Map => _map;
 		
 		#endregion
 
@@ -34,8 +21,12 @@ namespace Qlib.Assets
 			if (data.Length < Size)
 				throw new ArgumentException("Color map data has invalid size.");
 
+			_pixels = new int[Size];
+			
 			for (int i = 0; i < Size; i++)
-				_map[i] = Convert.ToInt32(data[i]);
+				_pixels[i] = Convert.ToInt32(data[i]);
+
+			_texture = null;
 		}
 
 		public override byte[] Serialize()
@@ -43,7 +34,7 @@ namespace Qlib.Assets
 			var data = new byte[Size];
 			
 			for (int i = 0; i < Size; i++)
-				data[i] = Convert.ToByte(_map[i]);
+				data[i] = Convert.ToByte(_pixels[i]);
 
 			return data;
 		}
@@ -63,36 +54,9 @@ namespace Qlib.Assets
 			if (lightLevel < 0 || lightLevel > 64)
 				throw new ArgumentException("Invalid light level, must be between 0 and 64.");
 
-			return _map[colorIndex * 64 + lightLevel];
+			return _pixels[colorIndex * 64 + lightLevel];
 		}
 		
 		#endregion
-
-		public void Initialize(Palette palette)
-		{
-			_palette = palette;
-		}
-
-		public Texture2D GetTexture()
-		{
-			if (_texture == null)
-				GenerateTexture();
-
-			return _texture;
-		}
-
-		private void GenerateTexture()
-		{
-			_texture = new Texture2D(256, 64, TextureFormat.RGB24, false);
-			_texture.filterMode = FilterMode.Point;	
-
-			var colors = new Color[Size];
-			
-			for (int i = 0; i < Size; i++)
-				colors[i] = _palette.Colors[_map[i]];
-
-			_texture.SetPixels(colors);
-			_texture.Apply(false);
-		}
 	}
 }

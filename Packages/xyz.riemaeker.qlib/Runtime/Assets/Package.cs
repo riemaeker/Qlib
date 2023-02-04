@@ -5,11 +5,8 @@ using System.Linq;
 using System.Text;
 using Qlib.Data;
 using Qlib.Extensions;
+using Qlib.Utilities;
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-using UnityEditor.AssetImporters;
-#endif
 
 namespace Qlib.Assets
 {
@@ -18,30 +15,6 @@ namespace Qlib.Assets
 	/// </summary>
 	public class Package : ScriptableObject
 	{
-		#region Private methods
-
-		private static T DeserializeAsset<T>(byte[] data) where T : Asset
-		{
-			var asset = CreateInstance<T>();
-			asset.Deserialize(data);
-
-			return asset;
-		}
-		
-		// Disambiguation logic for .lmp files, which can be different formats depending
-		// on their path (palette, color map or picture).
-		private static Asset DeserializeLump(byte[] data, string path)
-		{
-			return path switch
-			{
-				"gfx/palette.lmp" => DeserializeAsset<Palette>(data),
-				"gfx/colormap.lmp" => DeserializeAsset<ColorMap>(data),
-				_ => DeserializeAsset<Picture>(data)
-			};
-		}
-		
-		#endregion
-
 		#region Properties
 
 		/// <summary>
@@ -58,32 +31,11 @@ namespace Qlib.Assets
 
 		#region Public methods
 
-#if UNITY_EDITOR
-		/// <summary>
-		/// Imports a package from a .pak file
-		/// </summary>
-		/// <param name="path">.pak file path.</param>
-		/// <param name="context">Asset import context.</param>
-		/// <returns></returns>
-		public static void Import(string path, AssetImportContext context)
-		{
-			var package = Load(path, context);
-
-			context.AddObjectToAsset(context.assetPath, package);
-			context.SetMainObject(package);
-
-			for (var i = 0; i < package.Assets.Count; i++)
-			{
-				context.AddObjectToAsset(package.AssetPaths[i], package.Assets[i]);
-			}
-		}
-#endif
-
 		/// <summary>
 		///  Loads a package from a .pak file.
 		/// </summary>
 		/// <param name="path">.pak file path.</param>
-		public static Package Load(string path, AssetImportContext importContext = null)
+		public static Package Load(string path)
 		{
 			var data = File.ReadAllBytes(path);
 			var reader = new BinaryReader(new MemoryStream(data));
@@ -111,8 +63,6 @@ namespace Qlib.Assets
 				.ThenBy(v => v.PathString)
 				.ToList();
 
-			Palette palette = null;
-
 			// Create package with deserialized assets
 			var package = CreateInstance<Package>();
 
@@ -122,26 +72,10 @@ namespace Qlib.Assets
 				reader.BaseStream.Seek(entry.FileOffset, SeekOrigin.Begin);
 				reader.BaseStream.Read(assetData, 0, (int) entry.FileSize);
 
-				// Deserialize asset.
-				var extension = entry.PathString.Split(".").Last();
-				
-				Asset asset = extension switch
-				{
-					"cfg" or "rc" => DeserializeAsset<PlainText>(assetData),
-					"lmp" => DeserializeLump(assetData, entry.PathString),
-					_ => DeserializeAsset<GenericAsset>(assetData)
-				};
-				
-				// Store palette.
-				if (asset is Palette)
-					palette = (Palette) asset;
-				
-				// Generate palettized textures if we have a palette available.
-				if (palette != null && asset is IPalletized palletizedAsset)
-					palletizedAsset.Initialize(palette);
-				
-				// Store asset.
+				// Deserialize and store asset.
+				var asset = AssetUtils.DeserializeAsset(entry.PathString, assetData);
 				asset.name = entry.PathString;
+				
 				package.AddAsset(entry.PathString, asset);
 			}
 
@@ -265,22 +199,11 @@ namespace Qlib.Assets
 		/// <param name="targetDirectory">Target directory.</param>
 		public void ExtractAll(string targetDirectory)
 		{ 
-			try
+			for (var i = 0; i < Assets.Count; i++)
 			{
-				float counter = 0;
-
-				for (var i = 0; i < Assets.Count; i++)
-				{
-					var assetPath = AssetPaths[i];
-					var asset = Assets[i];
-
-					EditorUtility.DisplayProgressBar("Extracting .pak assets...", assetPath, counter / Assets.Count);
-					asset.Save(Path.Combine(targetDirectory, assetPath));
-				}
-			}
-			finally
-			{
-				EditorUtility.ClearProgressBar();
+				var assetPath = AssetPaths[i];
+				var asset = Assets[i];
+				asset.Save(Path.Combine(targetDirectory, assetPath));
 			}
 		}
 

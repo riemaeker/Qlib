@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Qlib.Editor
+namespace Qlib.Editor.Inspectors
 {
 	[CustomEditor(typeof(Picture))]
 	public class PictureInspector : UnityEditor.Editor
@@ -15,9 +15,12 @@ namespace Qlib.Editor
 
 			GUILayout.BeginVertical();
 			GUILayout.Space(15);
+
+			GUILayout.Label($"{picture.width} x {picture.height}");
+			GUILayout.Space(15);
 			
-			GUILayout.Label("", GUILayout.Height(picture.GetTexture().height * 2), GUILayout.Width(picture.GetTexture().width * 2));
-			GUI.DrawTexture(GUILayoutUtility.GetLastRect(), picture.GetTexture());
+			GUILayout.Label("", GUILayout.Height(picture.height * 2), GUILayout.Width(picture.width * 2));
+			GUI.DrawTexture(GUILayoutUtility.GetLastRect(), picture.texture);
 			
 			GUILayout.EndVertical();
 		}

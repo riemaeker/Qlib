@@ -8,8 +8,6 @@ public class QlibTest : MonoBehaviour
 	[SerializeField] private Renderer _renderer;
 
 	void Start()
-	{ 
-		//_colorMap.Initialize(_palette);
-		_renderer.material.SetTexture("_MainTex", _colorMap.GetTexture());
+	{
 	}
 }

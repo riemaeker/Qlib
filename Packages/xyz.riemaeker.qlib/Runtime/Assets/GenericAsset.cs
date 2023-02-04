@@ -12,6 +12,16 @@ namespace Qlib.Assets
 		[SerializeField] private byte[] _data;
 
 		#endregion
+		
+		#region Properties
+
+		public byte[] Data
+		{
+			get => _data;
+			set => _data = value;
+		}
+		
+		#endregion
 
 		#region Public methods
 

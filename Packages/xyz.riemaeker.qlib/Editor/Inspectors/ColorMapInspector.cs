@@ -2,7 +2,7 @@ using Qlib.Assets;
 using UnityEditor;
 using UnityEngine;
 
-namespace Qlib.Editor
+namespace Qlib.Editor.Inspectors
 {
 	[CustomEditor(typeof(ColorMap))]
 	public class ColorMapInspector : UnityEditor.Editor
@@ -16,8 +16,8 @@ namespace Qlib.Editor
 			GUILayout.BeginVertical();
 			GUILayout.Space(15);
 			
-			GUILayout.Label("", GUILayout.Height(colorMap.GetTexture().height * 2), GUILayout.Width(colorMap.GetTexture().width * 2));
-			GUI.DrawTexture(GUILayoutUtility.GetLastRect(), colorMap.GetTexture());
+			GUILayout.Label("", GUILayout.Height(colorMap.texture.height * 2), GUILayout.Width(colorMap.texture.width * 2));
+			GUI.DrawTexture(GUILayoutUtility.GetLastRect(), colorMap.texture);
 			
 			GUILayout.EndVertical();
 		}

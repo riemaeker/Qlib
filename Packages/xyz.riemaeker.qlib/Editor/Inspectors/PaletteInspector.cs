@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Qlib.Editor
+namespace Qlib.Editor.Inspectors
 {
 	[CustomEditor(typeof(Palette))]
 	public class PaletteInspector : UnityEditor.Editor

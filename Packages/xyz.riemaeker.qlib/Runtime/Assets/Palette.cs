@@ -16,11 +16,15 @@ namespace Qlib.Assets
 		#endregion
 
 		#region Properties
-		
+
 		/// <summary>
 		/// Palette colors.
 		/// </summary>
-		public Color[] Colors => _colors;
+		public Color[] Colors
+		{
+			get => _colors;
+			set => _colors = value;
+		}
 
 		/// <summary>
 		/// Texture representation of the palette.
