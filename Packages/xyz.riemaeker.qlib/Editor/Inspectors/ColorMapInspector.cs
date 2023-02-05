@@ -16,7 +16,7 @@ namespace Qlib.Editor.Inspectors
 			GUILayout.BeginVertical();
 			GUILayout.Space(15);
 			
-			GUILayout.Label("", GUILayout.Height(colorMap.texture.height * 2), GUILayout.Width(colorMap.texture.width * 2));
+			GUILayout.Label("", GUILayout.Height(colorMap.height * 2), GUILayout.Width(colorMap.width * 2));
 			GUI.DrawTexture(GUILayoutUtility.GetLastRect(), colorMap.texture);
 			
 			GUILayout.EndVertical();
