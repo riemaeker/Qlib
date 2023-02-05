@@ -31,6 +31,11 @@ namespace Qlib.Assets
 
 		#region Public methods
 
+		public static Package Create()
+		{
+			return CreateInstance<Package>();
+		}
+
 		/// <summary>
 		///  Loads a package from a .pak file.
 		/// </summary>

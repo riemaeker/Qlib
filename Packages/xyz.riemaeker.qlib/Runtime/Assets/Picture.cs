@@ -18,6 +18,14 @@ namespace Qlib.Assets
 		
 		#region Public methods
 
+		public static Picture Create(Texture2D texture)
+		{
+			var picture = CreateInstance<Picture>();
+			picture.SetPixels(texture);
+
+			return picture;
+		}
+		
 		public override void Deserialize(byte[] data)
 		{
 			var reader = new BinaryReader(new MemoryStream(data));
@@ -50,6 +58,13 @@ namespace Qlib.Assets
 			return data;
 		}
 
+		public void SetPixels(Texture2D tex)
+		{
+			_width = tex.width;
+			_height = tex.height;
+			_pixels = TextureUtils.Palettize(tex);
+		}
+		
 		protected override Texture2D CreateTexture()
 		{
 			// TODO: flip pixels?

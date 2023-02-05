@@ -38,6 +38,49 @@ namespace Qlib.Utilities
 			return texture;
 		}
 
+		public static int[] Palettize(Texture2D texture)
+		{
+			var texPixels = texture.GetPixels();
+			var pixels = new int[texPixels.Length];
+
+			for (int i = 0; i < texPixels.Length; i++)
+				pixels[i] = GetClosestPaletteMatch(texPixels[i], GlobalPalette.Colors);
+
+			return pixels;
+		}
+
+		/// <summary>
+		/// Uses Pythagorean distance in 3D colour space to find the closest match to a given colour on
+		/// a given colour palette, and returns the index on the palette at which that match was found.
+		/// </summary>
+		/// <param name="col">The colour to find the closest match to</param>
+		/// <param name="colorPalette">The palette of available colours to match</param>
+		/// <returns>The index on the palette of the colour that is the closest to the given colour.</returns>
+		public static int GetClosestPaletteMatch(Color col, Color[] colorPalette)
+		{
+			int colorMatch = 0;
+			float leastDistance = float.MaxValue;
+			float red = col.r;
+			float green = col.g;
+			float blue = col.b;
+			for (int i = 0; i < colorPalette.Length; ++i)
+			{
+				Color paletteColor = colorPalette[i];
+				float redDistance = paletteColor.r - red;
+				float greenDistance = paletteColor.g - green;
+				float blueDistance = paletteColor.b - blue;
+				float distance = (redDistance * redDistance) + (greenDistance * greenDistance) + (blueDistance * blueDistance);
+				if (distance >= leastDistance)
+					continue;
+				colorMatch = i;
+				leastDistance = distance;
+				if (distance == 0)
+					return i;
+			}
+			
+			return colorMatch;
+		}
+
 		private static Palette CreateDefaultPalette()
 		{
 			var palette = ScriptableObject.CreateInstance<Palette>();
